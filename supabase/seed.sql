@@ -1,0 +1,1 @@
+-- Les données initiales sont créées par « npm run seed » (voir README).
