@@ -23,7 +23,7 @@ export function AutoSubmitSelect({
         name={name}
         defaultValue={defaultValue}
         onChange={(e) => e.currentTarget.form?.requestSubmit()}
-        className="h-10 w-full appearance-none rounded-full border border-line-strong bg-transparent py-1 pl-5 pr-10 text-[0.9375rem] text-ink hover:border-rose focus:border-rose focus:outline-none"
+        className="h-10 w-full appearance-none rounded-full border border-line-strong bg-transparent py-1 pl-4 pr-9 text-[0.875rem] text-ink sm:pl-5 sm:pr-10 sm:text-[0.9375rem] hover:border-rose focus:border-rose focus:outline-none"
       >
         {options.map((o) => (
           <option key={o.value} value={o.value}>
@@ -31,7 +31,7 @@ export function AutoSubmitSelect({
           </option>
         ))}
       </select>
-      <ChevronDownIcon size={18} className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-ink" />
+      <ChevronDownIcon size={18} className="pointer-events-none absolute right-3 top-1/2 sm:right-4 -translate-y-1/2 text-ink" />
     </label>
   );
 }

@@ -104,9 +104,9 @@ export default async function HomePage() {
           <ul className="grid gap-8 sm:grid-cols-3 lg:pl-8">
             {features.map((f, i) => (
               <li key={i} className="flex flex-col items-center text-center">
-                <NamedIcon name={f.icon} size={50} strokeWidth={1.1} className="text-ink" />
-                <h3 className="mt-3 text-[1.35rem]">{f.title}</h3>
-                <p className="mt-1.5 max-w-[14rem] text-[0.98rem] leading-snug text-brown">{f.text}</p>
+                <NamedIcon name={f.icon} size={56} strokeWidth={1.1} className="text-ink" />
+                <h3 className="mt-3 text-[1.4rem] lg:text-[1.6rem]">{f.title}</h3>
+                <p className="mt-1.5 max-w-[15rem] text-[1rem] leading-snug text-brown lg:text-[1.1rem]">{f.text}</p>
               </li>
             ))}
           </ul>
@@ -115,7 +115,7 @@ export default async function HomePage() {
 
       {/* Histoire */}
       <section className="grid lg:grid-cols-[58%_42%]">
-        <div className="relative aspect-[628/300] min-h-64 w-full lg:aspect-auto lg:min-h-[17.5rem]">
+        <div className="relative aspect-[628/300] w-full lg:aspect-auto lg:min-h-[17.5rem]">
           <MediaImage media={story} sizes="(min-width: 1024px) 58vw, 100vw" />
         </div>
         <div className="container-site flex flex-col justify-center py-10 lg:mx-0 lg:max-w-[38rem] lg:px-14 lg:py-8">
@@ -123,7 +123,7 @@ export default async function HomePage() {
             <TextLines text={home.story_title} />
             <DoodleHeart className="ml-2 inline-block align-[-0.05em]" size={22} />
           </h2>
-          <p className="mt-4 text-[1.0625rem] leading-relaxed text-brown">
+          <p className="mt-4 text-[1.0625rem] leading-relaxed text-brown lg:text-[1.15rem]">
             <TextLines text={home.story_text} />
           </p>
           {home.story_cta_label ? (

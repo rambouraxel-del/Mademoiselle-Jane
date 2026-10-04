@@ -75,7 +75,7 @@ export function Header({
 
       <div className="border-b border-line">
         <div className="container-site relative">
-          <div className="grid grid-cols-[1fr_auto_1fr] items-center pt-4 pb-2 lg:pt-6 lg:pb-1">
+          <div className="grid grid-cols-[1fr_auto_1fr] items-center pt-3 pb-1 lg:pt-4 lg:pb-0">
             {/* Gauche : menu mobile + recherche */}
             <div className="flex items-center gap-1">
               <button
@@ -95,7 +95,7 @@ export function Header({
                 aria-controls={searchId}
                 onClick={() => setSearchOpen((v) => !v)}
               >
-                <SearchIcon size={25} />
+                <SearchIcon size={28} />
                 <span className="visually-hidden">Rechercher une médaille</span>
               </button>
             </div>
@@ -112,14 +112,14 @@ export function Header({
                 className="hidden h-11 w-11 items-center justify-center rounded-full text-ink hover:text-rose-dark sm:inline-flex"
                 title="Suivre ma commande"
               >
-                <UserIcon size={27} />
+                <UserIcon size={30} />
                 <span className="visually-hidden">Suivre ma commande</span>
               </Link>
               <Link
                 href="/panier"
                 className="relative -mr-2 inline-flex h-11 w-11 items-center justify-center rounded-full text-ink hover:text-rose-dark"
               >
-                <BagIcon size={27} />
+                <BagIcon size={30} />
                 <span className="visually-hidden">Panier, {count} article{count > 1 ? "s" : ""}</span>
                 {count > 0 ? (
                   <span
@@ -135,7 +135,7 @@ export function Header({
 
           {/* Navigation principale (ordinateur) */}
           <nav aria-label="Navigation principale" className="hidden justify-center lg:flex">
-            <ul className="flex items-center gap-14 pb-3 pt-1">
+            <ul className="flex items-center gap-14 pb-2">
               {NAV_LINKS.map((link) => {
                 const active = isActive(pathname, link.href);
                 return (
@@ -143,7 +143,7 @@ export function Header({
                     <Link
                       href={link.href}
                       aria-current={active ? "page" : undefined}
-                      className={`relative inline-block py-2 text-[1.0625rem] tracking-[0.01em] transition-colors ${
+                      className={`relative inline-block py-2 text-[1.15rem] tracking-[0.01em] transition-colors ${
                         active ? "text-rose-text" : "text-ink hover:text-rose-text"
                       }`}
                     >

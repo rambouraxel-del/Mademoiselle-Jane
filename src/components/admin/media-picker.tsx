@@ -155,13 +155,7 @@ export function MediaPicker({
               setSelected((s) => (multiple ? [...s, ...uploaded] : uploaded.slice(0, 1)));
             }}
           />
-          <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              load(q);
-            }}
-            className="flex gap-2"
-          >
+          <div className="flex gap-2" role="search">
             <label htmlFor="picker-search" className="visually-hidden">
               Rechercher une photo
             </label>
@@ -170,12 +164,18 @@ export function MediaPicker({
               className={inputClass}
               value={q}
               onChange={(e) => setQ(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  e.preventDefault();
+                  load(q);
+                }
+              }}
               placeholder="Rechercher dans la bibliothèque (texte alternatif, nom de fichier)"
             />
-            <button type="submit" className={btnSecondary}>
+            <button type="button" className={btnSecondary} onClick={() => load(q)}>
               Rechercher
             </button>
-          </form>
+          </div>
           {error ? <Notice tone="error">{error}</Notice> : null}
           {loading ? <p className="text-sm text-brown-soft">Chargement…</p> : null}
           <ul className="grid grid-cols-3 gap-3 sm:grid-cols-4 md:grid-cols-6">

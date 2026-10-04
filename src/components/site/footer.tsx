@@ -37,7 +37,7 @@ export function Footer({ settings, logo }: { settings: AllSettings; logo: React.
         </div>
 
         <nav aria-label="Pied de page" className="md:border-l md:border-line md:px-8">
-          <ul className="space-y-1.5 text-[0.9375rem]">
+          <ul className="space-y-1.5 text-[1rem]">
             {NAV_LINKS.map((l) => (
               <li key={l.href}>
                 <Link href={l.href} className="text-ink hover:text-rose-text">

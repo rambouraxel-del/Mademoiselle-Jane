@@ -144,7 +144,9 @@ export async function createCheckout(
       .eq("id", order.order_id);
     if (updateError || !session.url) throw new Error("session_not_saved");
     return { ok: true, url: session.url, orderNumber: order.order_number };
-  } catch {
+  } catch (error) {
+    // Journal technique sans donnée personnelle
+    console.error("Création de session Stripe impossible :", error instanceof Error ? error.message : error);
     await supabase.rpc("cancel_unpaid_order", { p_order_id: order.order_id });
     return { ok: false, error: "Le paiement n’a pas pu être initialisé. Merci de réessayer dans un instant.", quote };
   }

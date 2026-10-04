@@ -54,8 +54,8 @@ export default async function ShopPage({ searchParams }: PageProps<"/medailles">
 
       <section className="container-site pb-14 pt-5" aria-label="Catalogue">
         <form method="get" action="/medailles" className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-          <nav aria-label="Filtrer par forme" className="-mx-1 overflow-x-auto px-1 pb-1">
-            <ul className="flex gap-3">
+          <nav aria-label="Filtrer par forme">
+            <ul className="flex flex-wrap gap-2 sm:gap-3">
               <li>
                 <Link
                   href={hrefWith(current, { forme: "" })}
@@ -80,8 +80,8 @@ export default async function ShopPage({ searchParams }: PageProps<"/medailles">
           </nav>
 
           {filters.forme ? <input type="hidden" name="forme" value={filters.forme} /> : null}
-          <div className="flex flex-wrap items-center gap-3">
-            <label className="relative flex h-10 min-w-0 flex-1 items-center sm:flex-none">
+          <div className="grid grid-cols-2 items-center gap-2 sm:flex sm:flex-wrap sm:gap-3">
+            <label className="relative col-span-2 flex h-10 min-w-0 items-center sm:col-span-1 sm:flex-none">
               <span className="visually-hidden">Rechercher</span>
               <SearchIcon size={18} className="pointer-events-none absolute left-4 text-brown-soft" />
               <input
@@ -160,7 +160,7 @@ export default async function ShopPage({ searchParams }: PageProps<"/medailles">
         <section className="bg-beige-soft">
           <div className="container-site grid items-center gap-6 py-10 md:grid-cols-[minmax(0,0.9fr)_minmax(0,2fr)] md:py-12">
             <div className="hidden justify-center md:flex md:border-r md:border-brown/25 md:pr-8">
-              <LoopHeart className="w-full max-w-[16rem]" />
+              <LoopHeart className="h-auto w-full max-w-[19rem]" />
             </div>
             <p className="text-center font-serif text-[2rem] leading-[1.12] text-ink sm:text-[2.6rem] lg:text-[3.15rem]">
               <TextLines text={shop.quote} />

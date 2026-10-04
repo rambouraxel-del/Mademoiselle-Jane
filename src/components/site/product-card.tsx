@@ -43,7 +43,7 @@ export function ProductCard({
           className="transition-transform duration-500 ease-out group-hover:scale-[1.025]"
         />
         {variant === "shop" && personalizable ? (
-          <span className="absolute left-2.5 top-2.5 rounded-full bg-blush-soft/95 px-3.5 py-1 text-[0.72rem] font-medium text-ink shadow-sm sm:left-3 sm:top-3">
+          <span className="absolute left-2.5 top-2.5 rounded-full bg-blush-soft/95 px-4 py-1 text-[0.72rem] font-medium lg:text-[0.82rem] text-ink shadow-sm sm:left-3 sm:top-3">
             Personnalisable
           </span>
         ) : null}
@@ -57,28 +57,28 @@ export function ProductCard({
       {variant === "home" ? (
         <div className="flex items-start justify-between gap-3 px-1 pt-3 sm:px-4">
           <div>
-            <h3 className="font-serif text-[1.3rem] leading-tight text-ink">
+            <h3 className="font-serif text-[1.35rem] leading-tight text-ink lg:text-[1.55rem]">
               <Link href={href} className="after:absolute after:inset-0 focus-visible:outline-none">
                 {title}
               </Link>
             </h3>
-            <p className="mt-1 font-serif text-[1.3rem] text-ink">{price}</p>
+            <p className="mt-1 font-serif text-[1.35rem] text-ink lg:text-[1.55rem]">{price}</p>
           </div>
           <span
             aria-hidden="true"
-            className="mt-0.5 inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-blush text-ink transition-colors group-hover:bg-rose group-hover:text-white"
+            className="mt-0.5 inline-flex h-12 w-12 shrink-0 lg:h-14 lg:w-14 items-center justify-center rounded-full bg-blush text-ink transition-colors group-hover:bg-rose group-hover:text-white"
           >
-            <BagIcon size={22} />
+            <BagIcon size={24} />
           </span>
         </div>
       ) : (
         <div className="px-1 pt-2.5 sm:px-1.5">
-          <h3 className="font-serif text-[1.3rem] leading-snug text-ink sm:text-[1.45rem]">
+          <h3 className="font-serif text-[1.35rem] leading-snug text-ink sm:text-[1.5rem] lg:text-[1.65rem]">
             <Link href={href} className="after:absolute after:inset-0 focus-visible:outline-none">
               {title}
             </Link>
           </h3>
-          <p className="font-serif text-[1.3rem] text-ink sm:text-[1.45rem]">{price}</p>
+          <p className="font-serif text-[1.35rem] text-ink sm:text-[1.5rem] lg:text-[1.65rem]">{price}</p>
         </div>
       )}
     </article>

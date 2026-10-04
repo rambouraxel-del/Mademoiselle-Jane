@@ -561,7 +561,7 @@ export function ProductForm({
               </div>
             </div>
             <p className={helpClass}>
-              Plus simple : réorganisez par glisser des flèches depuis{" "}
+              Plus simple : réorganisez avec les flèches depuis{" "}
               <Link href="/admin/produits/ordre" className="underline">Ordre d’affichage</Link>.
             </p>
           </div>
