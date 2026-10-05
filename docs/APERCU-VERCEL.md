@@ -52,16 +52,53 @@ Il s’active avec **une seule variable : `PREVIEW_MODE=true`**.
    - Ouvrez le lien : le bandeau sombre « Aperçu visuel du site » doit apparaître en haut.
    - Parcourez l’accueil, la boutique, une fiche produit, puis ajoutez une médaille au panier.
 
+## Environnements Vercel : Production ou Preview
+
+Vercel classe chaque déploiement dans un environnement :
+
+- **Production** : la *branche de production* du projet. À l’import, Vercel prend la branche par défaut du dépôt GitHub.
+- **Preview** : toutes les autres branches.
+
+Dans ce dépôt, la branche par défaut GitHub est encore l’ancienne `claude/dog-medals-ecommerce-v1-7reo8x`. Les déploiements de `main` sont donc des déploiements **Preview**.
+
+Une variable n’est transmise qu’aux environnements cochés. Pour que l’aperçu fonctionne sur un déploiement Preview, `PREVIEW_MODE` doit être cochée pour **Preview**.
+
+### Activer l’aperçu dans l’environnement Preview
+
+1. Vercel → votre projet → **Settings → Environment Variables**.
+2. Si `PREVIEW_MODE` existe déjà : menu **…** → **Edit**. Sinon : **Add Environment Variable**.
+   - *Key* : `PREVIEW_MODE`
+   - *Value* : `true`
+   - *Environments* : cochez **Preview**. Cochez aussi **Production** si vous voulez l’aperçu sur le lien principal.
+   - Pour *Preview*, laissez « All Preview Branches » (ou choisissez `main`).
+   - **Save**.
+3. Une variable ne s’applique qu’aux **nouveaux** déploiements. Allez dans **Deployments**, ouvrez le dernier déploiement de la branche `main`, puis menu **…** → **Redeploy** → **Redeploy**.
+4. Quand le statut passe à *Ready*, ouvrez le lien du déploiement suivi de `/api/etat`, par exemple `https://….vercel.app/api/etat`. Vous devez lire `"previewMode":true` et `"vercelEnvironment":"preview"`.
+
+Attention : par défaut, Vercel protège les déploiements **Preview** (« Vercel Authentication »). Le lien demande alors une connexion au compte Vercel. Pour partager l’aperçu sans compte, deux possibilités :
+- **Recommandé** : faire de `main` la branche de production (voir ci-dessous). Le lien principal `https://<projet>.vercel.app` est public.
+- Ou : *Settings → Deployment Protection* → désactiver « Vercel Authentication » pour ce projet.
+
+### Faire de `main` la branche de production (recommandé)
+
+1. GitHub → dépôt → **Settings → General → Default branch** : choisissez `main` (icône ⇄ → `main` → **Update**).
+2. Vercel → projet → **Settings → Environments → Production → Branch Tracking** : indiquez `main` → **Save**.
+3. **Deployments** → dernier déploiement de `main` → **…** → **Promote to Production**, ou **Redeploy**.
+
+Le lien de la case *Domains* affiche alors l’aperçu. Vérifiez que `PREVIEW_MODE` est aussi cochée pour **Production**.
+
 ## Mises à jour
 
 - Chaque nouveau commit sur la branche `main` redéploie automatiquement l’aperçu en 2 minutes environ.
 - Après une modification de variable (*Settings → Environment Variables*), il faut redéployer : *Deployments* → menu **…** du dernier déploiement → **Redeploy**.
+- La valeur de `PREVIEW_MODE` est lue au moment du build **et** à l’exécution. Les valeurs `true`, `1`, `oui`, `yes` et `on` sont acceptées, sans tenir compte des majuscules, espaces ou guillemets. Pour **désactiver** l’aperçu, supprimez la variable puis redéployez.
 
 ## Si quelque chose ne va pas
 
 | Symptôme | Solution |
 | --- | --- |
-| La page affiche « Configuration requise » | `PREVIEW_MODE` est absente ou mal écrite : la valeur doit être exactement `true`. Corrigez-la puis faites **Redeploy**. |
+| La page affiche « Configuration requise » | La page indique maintenant le diagnostic : variable absente, valeur non reconnue, environnement (Production ou Preview), branche et commit. Ajoutez `PREVIEW_MODE` = `true` pour **cet** environnement (voir « Environnements Vercel »), puis faites **Redeploy**. |
+| Vérifier l’état d’un déploiement | Ouvrez `<lien>/api/etat` : `previewMode` doit valoir `true`. Aucune donnée sensible n’y est affichée. |
 | Le dépôt n’apparaît pas à l’import | Autorisez l’application GitHub de Vercel sur ce dépôt (étape 2). |
 | Le déploiement échoue | Ouvrez le déploiement → **Build Logs** et transmettez-moi les dernières lignes. |
 | Le lien demande de se connecter à Vercel | Utilisez le lien de la case *Domains*, pas celui d’un déploiement précis. Sinon : *Settings → Deployment Protection* → désactivez la protection pour ce projet d’aperçu. |

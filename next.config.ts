@@ -15,6 +15,10 @@ const securityHeaders = [
 
 const nextConfig: NextConfig = {
   poweredByHeader: false,
+  // Mémorise le mode aperçu au moment du build (voir src/lib/preview/mode.ts).
+  env: {
+    MJ_PREVIEW_MODE_BUILD: process.env.PREVIEW_MODE ?? process.env.NEXT_PUBLIC_PREVIEW_MODE ?? "",
+  },
   images: {
     formats: ["image/avif", "image/webp"],
     qualities: [75, 85, 90],

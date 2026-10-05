@@ -1,3 +1,4 @@
+import { ConfigurationRequired } from "@/components/site/configuration-required";
 import { Footer } from "@/components/site/footer";
 import { Header } from "@/components/site/header";
 import { Logo } from "@/components/site/logo";
@@ -11,15 +12,7 @@ export const dynamic = "force-dynamic";
 export default async function SiteLayout({ children }: { children: React.ReactNode }) {
   const preview = isPreviewMode();
   if (!preview && !isSupabaseConfigured()) {
-    return (
-      <main className="container-site py-24 text-center">
-        <h1 className="text-4xl">Configuration requise</h1>
-        <p className="mx-auto mt-4 max-w-xl">
-          La base de données n’est pas encore connectée. Renseignez les variables Supabase décrites dans le README
-          (fichier <code>.env.example</code>).
-        </p>
-      </main>
-    );
+    return <ConfigurationRequired />;
   }
 
   const settings = await getSettings();

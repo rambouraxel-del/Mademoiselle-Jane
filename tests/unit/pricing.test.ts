@@ -157,3 +157,11 @@ describe("validation de la personnalisation", () => {
     expect(validatePersonalization(config, { name: "JANE", phone: "appelez-moi" }).errors.phone).toBeDefined();
   });
 });
+
+describe("détection du mode aperçu", () => {
+  it("reconnaît les valeurs usuelles, avec espaces, majuscules ou guillemets", async () => {
+    const { parsePreviewFlag } = await import("@/lib/preview/mode");
+    for (const v of ["true", "TRUE", " True ", '"true"', "'true'", "1", "oui", "yes", "on"]) expect(parsePreviewFlag(v), v).toBe(true);
+    for (const v of [undefined, "", "false", "0", "non", "vrai ?"]) expect(parsePreviewFlag(v), String(v)).toBe(false);
+  });
+});

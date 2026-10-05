@@ -23,6 +23,8 @@
 - Navigation, filtres, tri, recherche, fiches produits, personnalisation et panier fonctionnent. Les prix sont calculés côté serveur avec les données locales.
 - Paiement, contact, newsletter, suivi de commande, webhook et administration sont désactivés. Le site n’est pas indexé.
 - Vérifié en build de production, sans aucune variable Supabase, Stripe ni email : 11 tests de bout en bout réussis (`npm run test:preview`), dont l’absence de toute requête vers un autre site.
+- Activation robuste : la valeur est lue au build et à l’exécution, avec plusieurs écritures tolérées (`true`, `True`, `"true"`, `1`, `oui`). Diagnostic intégré dans la page « Configuration requise » et sur `/api/etat`.
+- Point Vercel : la branche par défaut GitHub est encore l’ancienne branche `claude/…`, donc `main` est déployée en environnement **Preview**. `PREVIEW_MODE` doit être cochée pour Preview, ou `main` doit devenir la branche de production.
 - Lien Vercel : étapes dans [APERCU-VERCEL.md](APERCU-VERCEL.md). Je n’ai pas de compte Vercel ici, donc le déploiement réel sur Vercel n’a pas été effectué.
 
 ## Testé (dans cet environnement)

@@ -1,4 +1,5 @@
 import "server-only";
+import { isPreviewActive } from "@/lib/preview/mode";
 import { siteUrl } from "@/lib/site-url";
 
 /**
@@ -42,7 +43,7 @@ export const env = {
  * site de production.
  */
 export function isPreviewMode(): boolean {
-  return process.env.PREVIEW_MODE?.trim().toLowerCase() === "true";
+  return isPreviewActive();
 }
 
 export function isSupabaseConfigured(): boolean {

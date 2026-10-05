@@ -1,5 +1,6 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
+import { isPreviewActive } from "@/lib/preview/mode";
 
 const PUBLIC_ADMIN_PATHS = ["/admin/connexion", "/admin/mot-de-passe-oublie", "/admin/auth/confirm"];
 
@@ -10,7 +11,7 @@ const PUBLIC_ADMIN_PATHS = ["/admin/connexion", "/admin/mot-de-passe-oublie", "/
  */
 export async function proxy(request: NextRequest) {
   // Aperçu visuel : l'administration est entièrement désactivée.
-  if (process.env.PREVIEW_MODE?.trim().toLowerCase() === "true") {
+  if (isPreviewActive()) {
     const target = request.nextUrl.clone();
     target.pathname = "/administration-desactivee";
     target.search = "";
@@ -18,7 +19,13 @@ export async function proxy(request: NextRequest) {
   }
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const key = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
-  if (!url || !key) return NextResponse.next();
+  if (!url || !key) {
+    // Supabase non configuré : page de diagnostic « Configuration requise ».
+    const target = request.nextUrl.clone();
+    target.pathname = "/administration-desactivee";
+    target.search = "";
+    return NextResponse.rewrite(target, { status: 503, headers: { "X-Robots-Tag": "noindex, nofollow" } });
+  }
 
   let response = NextResponse.next({ request });
   const supabase = createServerClient(url, key, {

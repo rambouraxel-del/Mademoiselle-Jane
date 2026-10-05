@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
+import { isPreviewActive } from "@/lib/preview/mode";
 import { siteUrl as getSiteUrl } from "@/lib/site-url";
 import "./globals.css";
 
@@ -27,12 +28,16 @@ const sacramento = localFont({
 
 const siteUrl = getSiteUrl();
 
-const preview = process.env.PREVIEW_MODE?.trim().toLowerCase() === "true";
+export async function generateMetadata(): Promise<Metadata> {
+  return {
+    ...baseMetadata,
+    // L'aperçu visuel ne doit jamais être indexé par les moteurs de recherche.
+    ...(isPreviewActive() ? { robots: { index: false, follow: false } } : {}),
+  };
+}
 
-export const metadata: Metadata = {
+const baseMetadata: Metadata = {
   metadataBase: new URL(siteUrl),
-  // L'aperçu visuel ne doit jamais être indexé par les moteurs de recherche.
-  ...(preview ? { robots: { index: false, follow: false } } : {}),
   title: {
     default: "Mademoizelle Jane — Médailles personnalisées pour chiens",
     template: "%s — Mademoizelle Jane",
