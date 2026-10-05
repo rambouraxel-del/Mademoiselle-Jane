@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
+import { siteUrl as getSiteUrl } from "@/lib/site-url";
 import "./globals.css";
 
 // Polices hébergées localement (licence SIL OFL, voir src/fonts/LICENSE-*.txt)
@@ -24,10 +25,14 @@ const sacramento = localFont({
   display: "swap",
 });
 
-const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000").replace(/\/$/, "");
+const siteUrl = getSiteUrl();
+
+const preview = process.env.PREVIEW_MODE?.trim().toLowerCase() === "true";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
+  // L'aperçu visuel ne doit jamais être indexé par les moteurs de recherche.
+  ...(preview ? { robots: { index: false, follow: false } } : {}),
   title: {
     default: "Mademoizelle Jane — Médailles personnalisées pour chiens",
     template: "%s — Mademoizelle Jane",

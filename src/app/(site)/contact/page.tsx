@@ -4,7 +4,8 @@ import { ContactForm } from "@/components/site/contact-form";
 import { DoodleHeart } from "@/components/site/decor";
 import { TextLines } from "@/components/site/text-lines";
 import { getFaq, getSettings } from "@/lib/content/queries";
-import { env } from "@/lib/env";
+import { env, isPreviewMode } from "@/lib/env";
+import { PREVIEW_DISABLED } from "@/lib/preview/messages";
 import { createFormToken } from "@/lib/security/request";
 
 export const metadata: Metadata = {
@@ -44,6 +45,11 @@ export default async function ContactPage() {
           ) : null}
         </div>
         <div className="rounded-[3px] border border-line bg-[#fffdfa] p-5 shadow-[var(--shadow-soft)] sm:p-8">
+          {isPreviewMode() ? (
+            <p className="mb-5 rounded-[3px] border border-warning/30 bg-warning-bg px-4 py-3 text-[0.95rem] text-warning" role="note">
+              {PREVIEW_DISABLED.contact}
+            </p>
+          ) : null}
           <ContactForm formToken={createFormToken("contact")} turnstileSiteKey={env.turnstileSiteKey} />
         </div>
       </section>

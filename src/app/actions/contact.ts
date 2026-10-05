@@ -1,7 +1,8 @@
 "use server";
 
 import { z } from "zod";
-import { env } from "@/lib/env";
+import { env, isPreviewMode } from "@/lib/env";
+import { PREVIEW_DISABLED } from "@/lib/preview/messages";
 import { sendEmail } from "@/lib/email/send";
 import { contactNotificationEmail } from "@/lib/email/templates";
 import { clientFingerprint, rateLimit, verifyFormToken, verifyTurnstile } from "@/lib/security/request";
@@ -34,6 +35,7 @@ const schema = z.object({
 });
 
 export async function submitContact(_prev: ActionResult | null, formData: FormData): Promise<ActionResult> {
+  if (isPreviewMode()) return { ok: false, error: PREVIEW_DISABLED.contact };
   // Champ piège : un robot le remplit, une personne ne le voit pas.
   if ((formData.get("website") ?? "").toString() !== "") {
     return { ok: true, message: "Merci, votre message a bien été envoyé." };

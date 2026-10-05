@@ -1,7 +1,8 @@
 import "server-only";
 import { cache } from "react";
 import { createPublicClient } from "@/lib/supabase/server";
-import { isSupabaseConfigured } from "@/lib/env";
+import { isPreviewMode, isSupabaseConfigured } from "@/lib/env";
+import { previewFaq, previewMedia, previewPages, previewSettings, previewShippingZones } from "@/lib/preview/data";
 import { mapMedia } from "@/lib/catalog/map";
 import type { MediaRef } from "@/lib/catalog/types";
 import { DEFAULTS, mergeSettings, type AllSettings, type SettingsKey } from "./sections";
@@ -25,6 +26,7 @@ function defaultSettings(): AllSettings {
 
 /** Tous les contenus publics du site, fusionnés avec les valeurs par défaut. */
 export const getSettings = cache(async (): Promise<AllSettings> => {
+  if (isPreviewMode()) return previewSettings();
   if (!isSupabaseConfigured()) return defaultSettings();
   const supabase = createPublicClient();
   const { data, error } = await supabase.from("site_settings").select("key, value");
@@ -40,6 +42,7 @@ export const getSettings = cache(async (): Promise<AllSettings> => {
 export const getMediaByIds = cache(async (idsKey: string): Promise<Record<string, MediaRef>> => {
   const ids = idsKey.split(",").filter((id) => /^[0-9a-f-]{36}$/i.test(id));
   if (ids.length === 0) return {};
+  if (isPreviewMode()) return previewMedia(ids);
   const supabase = createPublicClient();
   const { data, error } = await supabase.from("media").select("*").in("id", ids);
   if (error) throw new Error(`Lecture des médias impossible : ${error.message}`);
@@ -54,6 +57,7 @@ export async function resolveImages(ids: string[]): Promise<Record<string, Media
 }
 
 export const getFaq = cache(async (): Promise<FaqItem[]> => {
+  if (isPreviewMode()) return previewFaq();
   const supabase = createPublicClient();
   const { data, error } = await supabase
     .from("faq_items")
@@ -65,6 +69,7 @@ export const getFaq = cache(async (): Promise<FaqItem[]> => {
 });
 
 export const getInfoPage = cache(async (slug: string): Promise<InfoPage | null> => {
+  if (isPreviewMode()) return previewPages().find((p) => p.slug === slug) ?? null;
   const supabase = createPublicClient();
   const { data, error } = await supabase.from("pages").select("*").eq("slug", slug).maybeSingle();
   if (error) throw new Error(`Lecture de la page impossible : ${error.message}`);
@@ -79,6 +84,7 @@ export const getInfoPage = cache(async (slug: string): Promise<InfoPage | null> 
 });
 
 export const getInfoPages = cache(async (): Promise<Pick<InfoPage, "slug" | "title">[]> => {
+  if (isPreviewMode()) return previewPages().map(({ slug, title }) => ({ slug, title }));
   const supabase = createPublicClient();
   const { data, error } = await supabase.from("pages").select("slug, title").order("sort_order");
   if (error) throw new Error(`Lecture des pages impossible : ${error.message}`);
@@ -86,6 +92,7 @@ export const getInfoPages = cache(async (): Promise<Pick<InfoPage, "slug" | "tit
 });
 
 export const getShippingZones = cache(async (): Promise<ShippingZone[]> => {
+  if (isPreviewMode()) return previewShippingZones();
   const supabase = createPublicClient();
   const { data, error } = await supabase
     .from("shipping_zones")

@@ -1,6 +1,7 @@
 import "server-only";
 import { redirect } from "next/navigation";
 import { cache } from "react";
+import { isPreviewMode } from "@/lib/env";
 import { createSessionClient } from "@/lib/supabase/server";
 
 export type AdminSession = {
@@ -15,6 +16,8 @@ export type AdminSession = {
  * (présent dans la table `admins`). Le jeton est validé auprès de Supabase.
  */
 export const getAdmin = cache(async (): Promise<AdminSession | null> => {
+  // Aperçu visuel : aucune session d'administration n'est acceptée.
+  if (isPreviewMode()) return null;
   const supabase = await createSessionClient();
   const { data: auth } = await supabase.auth.getUser();
   if (!auth.user) return null;

@@ -1,4 +1,5 @@
 import "server-only";
+import { siteUrl } from "@/lib/site-url";
 
 /**
  * Lecture centralisée des variables d'environnement côté serveur.
@@ -12,7 +13,7 @@ function read(name: string): string | undefined {
 }
 
 export const env = {
-  siteUrl: (read("NEXT_PUBLIC_SITE_URL") ?? "http://localhost:3000").replace(/\/$/, ""),
+  siteUrl: siteUrl(),
   supabaseUrl: read("NEXT_PUBLIC_SUPABASE_URL"),
   supabasePublishableKey: read("NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY"),
   supabaseSecretKey: read("SUPABASE_SECRET_KEY"),
@@ -34,22 +35,33 @@ export const env = {
   turnstileSecretKey: read("TURNSTILE_SECRET_KEY"),
 };
 
+/**
+ * Mode aperçu visuel (PREVIEW_MODE=true) : le site public s'affiche avec les
+ * données initiales locales, sans Supabase, Stripe ni emails. Paiement,
+ * formulaires et administration sont désactivés. À ne jamais activer sur le
+ * site de production.
+ */
+export function isPreviewMode(): boolean {
+  return process.env.PREVIEW_MODE?.trim().toLowerCase() === "true";
+}
+
 export function isSupabaseConfigured(): boolean {
   return Boolean(env.supabaseUrl && env.supabasePublishableKey);
 }
 
 export function isStripeConfigured(): boolean {
+  if (isPreviewMode()) return false;
   return Boolean(env.stripeSecretKey && env.stripeWebhookSecret);
 }
 
 /** Paiement en mode test Stripe (clé sk_test_…) ou non configuré. */
 export function paymentMode(): "live" | "test" | "disabled" {
-  if (!env.stripeSecretKey) return "disabled";
+  if (isPreviewMode() || !env.stripeSecretKey) return "disabled";
   return env.stripeSecretKey.startsWith("sk_live_") ? "live" : "test";
 }
 
 export function isEmailConfigured(): boolean {
-  if (!env.emailFrom) return false;
+  if (isPreviewMode() || !env.emailFrom) return false;
   if (env.emailProvider === "resend") return Boolean(env.resendApiKey);
   if (env.emailProvider === "smtp") return Boolean(env.smtpHost);
   return false;
@@ -57,8 +69,8 @@ export function isEmailConfigured(): boolean {
 
 export function requireFormSecret(): string {
   if (env.formSecret && env.formSecret.length >= 32) return env.formSecret;
-  if (process.env.NODE_ENV !== "production") {
-    // En développement uniquement : secret local non sensible.
+  if (process.env.NODE_ENV !== "production" || isPreviewMode()) {
+    // Développement ou aperçu (formulaires désactivés) : secret local non sensible.
     return "dev-only-form-secret-change-me-in-production-0000";
   }
   throw new Error("FORM_SECRET manquant ou trop court (32 caractères minimum).");

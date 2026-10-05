@@ -9,6 +9,7 @@ Boutique en ligne de médailles personnalisées pour chiens, réalisées à la m
 | Documentation | Pour qui |
 | --- | --- |
 | [docs/GUIDE-ADMINISTRATION.md](docs/GUIDE-ADMINISTRATION.md) | Ophélie et Axel : utiliser l’administration au quotidien |
+| [docs/APERCU-VERCEL.md](docs/APERCU-VERCEL.md) | Obtenir un lien de test sur Vercel sans aucun autre service (`PREVIEW_MODE=true`) |
 | [docs/MISE-EN-LIGNE.md](docs/MISE-EN-LIGNE.md) | Connecter Supabase, Vercel, Stripe, les emails et le domaine |
 | [docs/BILAN.md](docs/BILAN.md) | Ce qui est fait, testé, et ce qu’il reste à renseigner |
 | `docs/captures/` | Captures de validation (ordinateur et mobile) |
@@ -41,9 +42,11 @@ src/
   lib/validation/      validations communes
   app/globals.css      système de design centralisé (couleurs, typographies)
   fonts/               polices locales + licences (SIL OFL)
+  lib/seed/            données initiales (textes, produits) partagées par le seed et l'aperçu
+  lib/preview/         mode aperçu sans service externe (PREVIEW_MODE=true)
+public/media-initiales/ visuels provisoires extraits des maquettes
 supabase/
   migrations/          schéma, sécurité RLS, fonctions métier, fonctions admin
-  seed-media/          visuels provisoires extraits des maquettes
 scripts/
   seed.ts              données initiales (contenus, produits, photos, FAQ, pages)
   admin.ts             création / liste / retrait des comptes administrateurs
@@ -84,6 +87,10 @@ npm run dev
 > Si `supabase start` ne parvient pas à télécharger les images depuis `public.ecr.aws`, utilisez Docker Hub :
 > `SUPABASE_INTERNAL_IMAGE_REGISTRY=docker.io npm run db:start`.
 
+## Aperçu visuel sans service externe
+
+Avec `PREVIEW_MODE=true`, le site public fonctionne sans Supabase, Stripe ni emails : données initiales locales, navigation, filtres, fiches produits et panier. Le paiement, les formulaires et l’administration sont désactivés, et le site n’est pas indexé. Guide : [docs/APERCU-VERCEL.md](docs/APERCU-VERCEL.md).
+
 ## Commandes utiles
 
 | Commande | Rôle |
@@ -93,6 +100,7 @@ npm run dev
 | `npm run lint` / `npm run typecheck` | contrôles de qualité |
 | `npm test` | tests unitaires et d’intégration (Supabase local démarré + `npm run seed`) |
 | `npm run test:e2e` | tests de bout en bout (Supabase local + serveur) |
+| `npm run test:preview` | tests de l’aperçu visuel (serveur `PREVIEW_MODE=true` sur le port 3200) |
 | `npm run seed` | données initiales (ne remplace jamais ce qui existe) |
 | `npm run admin:create` / `admin:list` / `admin:remove` | comptes administrateurs |
 | `npm run db:types` | régénère les types TypeScript de la base |

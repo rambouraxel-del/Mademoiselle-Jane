@@ -1,5 +1,7 @@
 import "server-only";
 import { cache } from "react";
+import { isPreviewMode } from "@/lib/env";
+import { previewCollections, previewProducts } from "@/lib/preview/data";
 import { createPublicClient } from "@/lib/supabase/server";
 import { PRODUCT_SELECT, mapCollection, mapProduct, type ProductQueryRow } from "./map";
 import type { Collection, Product } from "./types";
@@ -9,6 +11,7 @@ import type { Collection, Product } from "./types";
  * RLS : seuls les produits publiés (et leurs variantes / photos) sont visibles.
  * Les pages publiques sont rendues à la demande : une modification enregistrée
  * dans l'administration est visible immédiatement, sans redéploiement.
+ * En mode aperçu (PREVIEW_MODE=true), les données initiales locales sont utilisées.
  */
 
 function sortProducts(products: Product[]): Product[] {
@@ -16,6 +19,7 @@ function sortProducts(products: Product[]): Product[] {
 }
 
 export const getPublishedProducts = cache(async (): Promise<Product[]> => {
+  if (isPreviewMode()) return sortProducts([...previewProducts()]);
   const supabase = createPublicClient();
   const { data, error } = await supabase
     .from("products")
@@ -26,6 +30,7 @@ export const getPublishedProducts = cache(async (): Promise<Product[]> => {
 });
 
 export const getPublishedProductBySlug = cache(async (slug: string): Promise<Product | null> => {
+  if (isPreviewMode()) return previewProducts().find((p) => p.slug === slug) ?? null;
   const supabase = createPublicClient();
   const { data, error } = await supabase
     .from("products")
@@ -45,6 +50,7 @@ export const getFeaturedProducts = cache(async (): Promise<Product[]> => {
 });
 
 export const getPublishedCollections = cache(async (): Promise<Collection[]> => {
+  if (isPreviewMode()) return previewCollections();
   const supabase = createPublicClient();
   const { data, error } = await supabase
     .from("collections")

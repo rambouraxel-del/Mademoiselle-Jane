@@ -1,4 +1,5 @@
 import "server-only";
+import { isPreviewMode } from "@/lib/env";
 import { createServiceClient } from "@/lib/supabase/server";
 
 export const PUBLIC_TOKEN_PATTERN = /^[0-9a-f]{48}$/;
@@ -30,7 +31,7 @@ export type PublicOrder = {
  * Ne renvoie aucune adresse ni coordonnée complète.
  */
 export async function getOrderByToken(token: string): Promise<PublicOrder | null> {
-  if (!PUBLIC_TOKEN_PATTERN.test(token)) return null;
+  if (isPreviewMode() || !PUBLIC_TOKEN_PATTERN.test(token)) return null;
   const supabase = createServiceClient();
   const { data, error } = await supabase
     .from("orders")

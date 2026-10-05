@@ -21,11 +21,11 @@ import {
   SEED_PAGES,
   SEED_PRODUCTS,
   SEED_SHIPPING_ZONES,
-} from "./lib/seed-content";
+} from "../src/lib/seed/content";
 
 loadEnv();
 const supabase = serviceClient();
-const MEDIA_DIR = path.join(process.cwd(), "supabase", "seed-media");
+const MEDIA_DIR = path.join(process.cwd(), "public", "media-initiales");
 
 function check<T>(label: string, result: { data: T; error: { message: string } | null }): T {
   if (result.error) throw new Error(`${label} : ${result.error.message}`);

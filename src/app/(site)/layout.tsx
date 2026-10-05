@@ -2,14 +2,15 @@ import { Footer } from "@/components/site/footer";
 import { Header } from "@/components/site/header";
 import { Logo } from "@/components/site/logo";
 import { getSettings, resolveImages } from "@/lib/content/queries";
-import { isSupabaseConfigured, paymentMode } from "@/lib/env";
+import { isPreviewMode, isSupabaseConfigured, paymentMode } from "@/lib/env";
 
 // Pages rendues à chaque visite : les modifications faites dans
 // l'administration sont visibles immédiatement, sans redéploiement.
 export const dynamic = "force-dynamic";
 
 export default async function SiteLayout({ children }: { children: React.ReactNode }) {
-  if (!isSupabaseConfigured()) {
+  const preview = isPreviewMode();
+  if (!preview && !isSupabaseConfigured()) {
     return (
       <main className="container-site py-24 text-center">
         <h1 className="text-4xl">Configuration requise</h1>
@@ -28,7 +29,11 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
 
   return (
     <div className="flex min-h-dvh flex-col">
-      {mode === "test" ? (
+      {preview ? (
+        <div className="bg-ink px-4 py-1.5 text-center text-xs tracking-wide text-white" role="note">
+          Aperçu visuel du site : navigation et panier uniquement. Aucune commande, aucun paiement, aucun envoi.
+        </div>
+      ) : mode === "test" ? (
         <div className="bg-ink px-4 py-1.5 text-center text-xs tracking-wide text-white">
           Boutique en mode test : aucun paiement réel n’est encaissé.
         </div>

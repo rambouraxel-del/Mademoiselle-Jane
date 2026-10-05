@@ -60,7 +60,7 @@ test("brouillon invisible, publication, prix et photo modifiés sans redéploiem
   await page.getByLabel("Nom", { exact: true }).fill("Dorée");
   await page.getByRole("button", { name: "+ Ajouter des photos" }).click();
   const dialog = page.getByRole("dialog", { name: "Ajouter des photos" });
-  await dialog.getByLabel("Choisir des photos à importer").setInputFiles(path.join(process.cwd(), "supabase/seed-media/coeur-rond-dore.jpg"));
+  await dialog.getByLabel("Choisir des photos à importer").setInputFiles(path.join(process.cwd(), "public/media-initiales/coeur-rond-dore.jpg"));
   await expect(dialog.getByText("1 sélectionnée(s)")).toBeVisible({ timeout: 30_000 });
   await dialog.getByRole("button", { name: "Utiliser ces photos" }).click();
   await page.getByRole("button", { name: "Enregistrer le brouillon" }).click();

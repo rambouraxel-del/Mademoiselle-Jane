@@ -2,7 +2,8 @@
 
 import { randomBytes } from "node:crypto";
 import { z } from "zod";
-import { env } from "@/lib/env";
+import { env, isPreviewMode } from "@/lib/env";
+import { PREVIEW_DISABLED } from "@/lib/preview/messages";
 import { CONSENT_TEXT } from "@/lib/newsletter/consent";
 import { getSettings } from "@/lib/content/queries";
 import { sendEmail } from "@/lib/email/send";
@@ -23,6 +24,7 @@ function token() {
 }
 
 export async function subscribeNewsletter(_prev: ActionResult | null, formData: FormData): Promise<ActionResult> {
+  if (isPreviewMode()) return { ok: false, error: PREVIEW_DISABLED.newsletter };
   const settings = await getSettings();
   if (!settings.general.newsletter_enabled) return { ok: false, error: "La newsletter n’est pas disponible." };
 
@@ -89,6 +91,7 @@ export async function subscribeNewsletter(_prev: ActionResult | null, formData: 
 const tokenSchema = z.string().regex(/^[0-9a-f]{48}$/);
 
 export async function confirmNewsletter(_prev: ActionResult | null, formData: FormData): Promise<ActionResult> {
+  if (isPreviewMode()) return { ok: false, error: PREVIEW_DISABLED.newsletter };
   const parsed = tokenSchema.safeParse(formData.get("token"));
   if (!parsed.success) return { ok: false, error: "Lien invalide." };
   const supabase = createServiceClient();
@@ -104,6 +107,7 @@ export async function confirmNewsletter(_prev: ActionResult | null, formData: Fo
 }
 
 export async function unsubscribeNewsletter(_prev: ActionResult | null, formData: FormData): Promise<ActionResult> {
+  if (isPreviewMode()) return { ok: false, error: PREVIEW_DISABLED.newsletter };
   const parsed = tokenSchema.safeParse(formData.get("token"));
   if (!parsed.success) return { ok: false, error: "Lien invalide." };
   const supabase = createServiceClient();

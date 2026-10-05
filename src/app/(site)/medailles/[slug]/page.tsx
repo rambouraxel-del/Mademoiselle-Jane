@@ -5,6 +5,7 @@ import { activeVariants, imageForVariant, isProductAvailable } from "@/lib/catal
 import { getPublishedProductBySlug, getPublishedProducts } from "@/lib/catalog/queries";
 import type { Product } from "@/lib/catalog/types";
 import { getSettings, resolveImages } from "@/lib/content/queries";
+import { siteUrl as getSiteUrl } from "@/lib/site-url";
 
 function pickVariant(product: Product, finition: string | undefined): string | null {
   const variants = activeVariants(product);
@@ -42,7 +43,8 @@ export default async function ProductPage({ params, searchParams }: PageProps<"/
   const images = await resolveImages([settings.product_page.details_image]);
   const finition = typeof sp.finition === "string" ? sp.finition : undefined;
   const related = all.filter((p) => p.id !== product.id).slice(0, 2);
-  const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL ?? "").replace(/\/$/, "");
+  const siteUrl = getSiteUrl();
+  const absolute = (url: string) => (url.startsWith("/") ? `${siteUrl}${url}` : url);
 
   // Données structurées (schema.org) cohérentes avec la page
   const jsonLd = {
@@ -50,7 +52,7 @@ export default async function ProductPage({ params, searchParams }: PageProps<"/
     "@type": "Product",
     name: product.name,
     description: product.shortDescription || product.description,
-    image: product.images.map((i) => i.media.url),
+    image: product.images.map((i) => absolute(i.media.url)),
     material: product.material || undefined,
     brand: { "@type": "Brand", name: "Mademoizelle Jane" },
     url: `${siteUrl}/medailles/${product.slug}`,
@@ -63,7 +65,7 @@ export default async function ProductPage({ params, searchParams }: PageProps<"/
           priceCurrency: "EUR",
           availability: v.available ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
           url: `${siteUrl}/medailles/${product.slug}?finition=${encodeURIComponent(v.finish || v.id)}`,
-          image: imageForVariant(product, v.id)?.media.url,
+          image: imageForVariant(product, v.id) ? absolute(imageForVariant(product, v.id)!.media.url) : undefined,
         }))
       : {
           "@type": "Offer",

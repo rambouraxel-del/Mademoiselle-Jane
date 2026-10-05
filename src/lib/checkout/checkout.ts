@@ -3,7 +3,7 @@ import type Stripe from "stripe";
 import { z } from "zod";
 import { getPublishedProducts } from "@/lib/catalog/queries";
 import { getShippingZones } from "@/lib/content/queries";
-import { env, isStripeConfigured } from "@/lib/env";
+import { env, isPreviewMode, isStripeConfigured } from "@/lib/env";
 import { getStripe } from "@/lib/payments/stripe";
 import { createServiceClient } from "@/lib/supabase/server";
 import { priceCart, type CartInputLine, type Quote } from "./pricing";
@@ -44,6 +44,7 @@ export async function createCheckout(
   country: string,
   stripe: StripeLike | null = null,
 ): Promise<CheckoutResult> {
+  if (isPreviewMode()) return { ok: false, error: "Aperçu visuel : le paiement est désactivé." };
   const quote = await quoteCart(lines, country);
   if (!quote.valid || !quote.zone) {
     return { ok: false, error: quote.issues[0] ?? "Panier invalide.", quote };

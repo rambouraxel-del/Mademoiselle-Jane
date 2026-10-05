@@ -1,6 +1,6 @@
 import type Stripe from "stripe";
 import StripeSdk from "stripe";
-import { env } from "@/lib/env";
+import { env, isPreviewMode } from "@/lib/env";
 import { processStripeEvent } from "@/lib/payments/webhook";
 
 export const dynamic = "force-dynamic";
@@ -11,6 +11,7 @@ export const dynamic = "force-dynamic";
  * par Stripe est refusé. C'est le seul moyen de marquer une commande payée.
  */
 export async function POST(request: Request) {
+  if (isPreviewMode()) return new Response("preview_mode", { status: 503 });
   if (!env.stripeWebhookSecret) {
     return new Response("webhook_not_configured", { status: 503 });
   }

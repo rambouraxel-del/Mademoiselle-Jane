@@ -1,7 +1,9 @@
 "use server";
 
 import { z } from "zod";
+import { isPreviewMode } from "@/lib/env";
 import { FULFILLMENT_LABELS, PAYMENT_LABELS } from "@/lib/orders/labels";
+import { PREVIEW_DISABLED } from "@/lib/preview/messages";
 import { clientFingerprint, rateLimit } from "@/lib/security/request";
 import { createServiceClient } from "@/lib/supabase/server";
 import { emailSchema } from "@/lib/validation/common";
@@ -33,6 +35,7 @@ const schema = z.object({
 
 /** Suivi d'une commande avec son numéro ET l'email utilisé (tentatives limitées). */
 export async function lookupOrder(_prev: LookupResult | null, formData: FormData): Promise<LookupResult> {
+  if (isPreviewMode()) return { ok: false, error: PREVIEW_DISABLED.lookup };
   const parsed = schema.safeParse({ number: formData.get("number") ?? "", email: formData.get("email") ?? "" });
   if (!parsed.success) return { ok: false, error: parsed.error.issues[0]?.message ?? "Formulaire invalide." };
 

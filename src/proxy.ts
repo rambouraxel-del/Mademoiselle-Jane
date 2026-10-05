@@ -9,6 +9,13 @@ const PUBLIC_ADMIN_PATHS = ["/admin/connexion", "/admin/mot-de-passe-oublie", "/
  * administrateur est refait côté serveur dans chaque page et chaque action.
  */
 export async function proxy(request: NextRequest) {
+  // Aperçu visuel : l'administration est entièrement désactivée.
+  if (process.env.PREVIEW_MODE?.trim().toLowerCase() === "true") {
+    const target = request.nextUrl.clone();
+    target.pathname = "/administration-desactivee";
+    target.search = "";
+    return NextResponse.rewrite(target, { status: 403, headers: { "X-Robots-Tag": "noindex, nofollow" } });
+  }
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const key = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
   if (!url || !key) return NextResponse.next();

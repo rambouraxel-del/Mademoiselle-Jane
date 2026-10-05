@@ -17,6 +17,14 @@
 
 **Sécurité** : RLS sur toutes les tables et sur le stockage, rôle admin vérifié côté serveur et en base, statut de paiement non modifiable depuis l’administration, inscription publique fermée, validation serveur (zod), limitation des tentatives, contenu des images vérifié et métadonnées supprimées, pas de HTML brut dans les contenus, protection CSV contre l’injection de formules, secrets uniquement côté serveur.
 
+## Aperçu visuel (PREVIEW_MODE=true)
+
+- Le site public s’affiche entièrement sans aucun service externe, avec les données initiales locales (produits, textes, photos).
+- Navigation, filtres, tri, recherche, fiches produits, personnalisation et panier fonctionnent. Les prix sont calculés côté serveur avec les données locales.
+- Paiement, contact, newsletter, suivi de commande, webhook et administration sont désactivés. Le site n’est pas indexé.
+- Vérifié en build de production, sans aucune variable Supabase, Stripe ni email : 11 tests de bout en bout réussis (`npm run test:preview`), dont l’absence de toute requête vers un autre site.
+- Lien Vercel : étapes dans [APERCU-VERCEL.md](APERCU-VERCEL.md). Je n’ai pas de compte Vercel ici, donc le déploiement réel sur Vercel n’a pas été effectué.
+
 ## Testé (dans cet environnement)
 
 74 tests automatisés, tous réussis sur une base locale remise à zéro, plus lint, TypeScript et build de production.

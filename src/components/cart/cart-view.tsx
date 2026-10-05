@@ -16,9 +16,10 @@ type Props = {
   countries: string[];
   paymentEnabled: boolean;
   testMode: boolean;
+  previewMode?: boolean;
 };
 
-export function CartView({ countries, paymentEnabled, testMode }: Props) {
+export function CartView({ countries, paymentEnabled, testMode, previewMode = false }: Props) {
   const lines = useCart();
   const [country, setCountry] = useState(countries.includes("FR") ? "FR" : (countries[0] ?? "FR"));
   const [quote, setQuote] = useState<Quote | null>(null);
@@ -244,8 +245,10 @@ export function CartView({ countries, paymentEnabled, testMode }: Props) {
             {redirecting ? "Redirection vers le paiement…" : "Passer au paiement sécurisé"}
           </button>
         ) : (
-          <p className="mt-5 rounded-[3px] border border-warning/30 bg-warning-bg px-4 py-3 text-[0.95rem] text-warning">
-            Le paiement en ligne n’est pas encore activé. Revenez très bientôt !
+          <p className="mt-5 rounded-[3px] border border-warning/30 bg-warning-bg px-4 py-3 text-[0.95rem] text-warning" role="note">
+            {previewMode
+              ? "Aperçu visuel : le paiement est désactivé. Les prix et frais affichés sont ceux qui seraient appliqués."
+              : "Le paiement en ligne n’est pas encore activé. Revenez très bientôt !"}
           </p>
         )}
         {testMode ? (
