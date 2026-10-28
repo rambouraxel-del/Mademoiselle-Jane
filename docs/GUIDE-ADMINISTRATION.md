@@ -1,5 +1,28 @@
 # Guide de l’administration
 
+## Les deux accès
+
+| Accès | Adresse | Utilisation |
+| --- | --- | --- |
+| Boutique | `/` | Parcourir les médailles, les personnaliser et consulter le panier. |
+| Espace administrateur | `/admin` | Se connecter pour gérer les produits, photos, textes et commandes. |
+
+Le lien **Espace administrateur**, en bas de la boutique, ouvre la connexion sécurisée. Dans l'administration, **Voir le site** permet de revenir à la boutique. Chaque administrateur utilise son compte personnel ; les visiteurs n'ont pas besoin de compte client.
+
+### Activer l'administration pour la première fois
+
+Les deux accès utilisent le même catalogue Supabase : une modification publiée dans l'administration apparaît dans la boutique sans redéploiement.
+
+1. Déployer la branche `main`, qui contient la boutique et l'administration. L'ancienne branche `claude/dog-medals-ecommerce-v1-7reo8x` ne contient pas l'administration.
+2. Relier le projet Supabase, appliquer les migrations et charger les données initiales (voir [Mise en ligne](MISE-EN-LIGNE.md)).
+3. Créer les comptes administrateurs personnels d'Axel et d'Ophélie.
+4. Désactiver `PREVIEW_MODE` et redéployer avec les variables Supabase configurées.
+5. Vérifier la connexion, enregistrer un brouillon, puis publier une modification et contrôler son affichage dans la boutique.
+
+Le mode aperçu visuel laisse volontairement l'administration désactivée. Stripe peut être configuré ensuite : le paiement reste indisponible tant que ses clés ne sont pas renseignées.
+
+## Utilisation quotidienne
+
 Pour Ophélie et Axel. L’administration se trouve à l’adresse **`votre-site/admin`**. Elle fonctionne sur ordinateur et sur téléphone (menu ☰ en haut à gauche).
 
 Chaque action affiche un message vert (réussi) ou rouge (problème). Les suppressions demandent toujours une confirmation. Ce qui est **publié** apparaît immédiatement sur le site, sans intervention technique.

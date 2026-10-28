@@ -100,6 +100,11 @@ export function Footer({ settings, logo }: { settings: AllSettings; logo: React.
                 </Link>
               </li>
             ))}
+            <li>
+              <Link href="/admin" prefetch={false} rel="nofollow" className="hover:text-rose-text">
+                Espace administrateur
+              </Link>
+            </li>
           </ul>
           <p>© {new Date().getFullYear()} Mademoizelle Jane</p>
         </div>
